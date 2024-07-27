@@ -27,7 +27,16 @@ Install_App()
 		SYSNAME=darwin
 	fi
 
-	FILE_TGZ=gorse_${SYSNAME}_${sysArch}.zip
+	ARCH="amd64"
+	if [ "$sysArch" == "x86_64" ];then
+		ARCH="amd64"
+	elif [ "$sysArch" == "aarch64" ];then
+		ARCH="arm64"
+	else
+		ARCH="amd64"
+	fi
+
+	FILE_TGZ=gorse_${SYSNAME}_${ARCH}.zip
 	GORSE_DIR=$serverPath/source/gorse
 
 	# https://github.com/gorse-io/gorse/releases/download/v0.4.15/gorse_linux_amd64.zip
