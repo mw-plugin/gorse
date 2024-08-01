@@ -1,9 +1,6 @@
 [database]
-cache_store = "redis://:lBLcmwgI82@127.0.0.1:6379/0"
-
-#data_store = "mysql://gorse:gorse_pass@tcp(localhost:3306)/gorse"
+cache_store = "redis://:lBLcmwgI82@127.0.0.1:6379/3"
 data_store = "mongodb://gorse:@127.0.0.1:27017/gorse"
-
 
 table_prefix = "gorse_"
 cache_table_prefix = "gorse_"
