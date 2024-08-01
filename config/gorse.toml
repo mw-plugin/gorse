@@ -1,6 +1,6 @@
 [database]
-cache_store = "redis://:lBLcmwgI82@127.0.0.1:6379/3"
-data_store = "mongodb://gorse:@127.0.0.1:27017/gorse"
+cache_store = "{$CONFIG_REDIS}"
+data_store = "mongodb://127.0.0.1:27017/gorse"
 
 table_prefix = "gorse_"
 cache_table_prefix = "gorse_"
@@ -15,8 +15,8 @@ http_cors_domains = []
 http_cors_methods = []
 n_jobs = 1
 meta_timeout = "10s"
-dashboard_user_name = ""
-dashboard_password = ""
+dashboard_user_name = "{$CONFIG_ADMIN}"
+dashboard_password = "{$CONFIG_PASS}"
 admin_api_key = ""
 
 [server]

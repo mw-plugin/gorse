@@ -26,7 +26,7 @@ function gorsePost(method, version, args,callback){
     },'json'); 
 }
 
-function redisPostCallbak(method, version, args,callback){
+function gorsePostCallbak(method, version, args,callback){
     var loadT = layer.msg('正在获取...', { icon: 16, time: 0, shade: 0.3 });
 
     var req_data = {};
@@ -55,15 +55,11 @@ function redisPostCallbak(method, version, args,callback){
 
 
 function gorseReadme(){
-    var cmd_01 = '/www/server/redis/bin/redis-cli --cluster create 127.0.0.1:6379 127.0.0.1:6380 127.0.0.1:6381 --cluster-replicas 0';
-    var cmd_02 = '/www/server/redis/bin/redis-cli --cluster create 127.0.0.1:6379 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 127.0.0.1:6383 127.0.0.1:6384 --cluster-replicas 1';
 
 
     var readme = '<ul class="help-info-text c7">';
-    readme += '<li>集群创建1</li>';
-    readme += '<li>'+cmd_01+'</li>';
-    readme += '<li>集群创建2</li>';
-    readme += '<li>'+cmd_02+'</li>';
+    readme += '<li>参考官方</li>';
+    readme += '<li><a target="_blank" href="https://gorse.io">https://gorse.io</a></li>';
     readme += '</ul>';
 
     $('.soft-man-con').html(readme);   

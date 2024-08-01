@@ -100,7 +100,7 @@ def readConfigTpl():
 def getPidFile():
     file = getConf()
     content = mw.readFile(file)
-    rep = 'pidfile\s*(.*)'
+    rep = r'pidfile\s*(.*)'
     tmp = re.search(rep, content)
     return tmp.groups()[0].strip()
 
@@ -116,12 +116,31 @@ def status():
         return 'stop'
     return 'start'
 
+
+def initRedisConf():
+    requirepass = ""
+    conf = mw.getServerDir() + '/redis/redis.conf'
+    content = mw.readFile(conf)
+    rep = r"^(requirepass" + r')\s*([.0-9A-Za-z_& ~]+)'
+    tmp = re.search(rep, content, re.M)
+    if tmp:
+        requirepass = tmp.groups()[1]
+
+    port = "6379"
+    rep = r"^(port)\s*([.0-9A-Za-z_& ~]+)"
+    tmp = re.search(rep, content, re.M)
+    if tmp:
+        port = tmp.groups()[1]
+
+    return 'redis://:'+requirepass+'@127.0.0.1:'+port+'/3'
+
 def contentReplace(content):
     service_path = mw.getServerDir()
     content = content.replace('{$ROOT_PATH}', mw.getRootDir())
     content = content.replace('{$SERVER_PATH}', service_path)
-    content = content.replace('{$SERVER_APP}', service_path + '/redis')
-    content = content.replace('{$REDIS_PASS}', mw.getRandomString(10))
+    content = content.replace('{$CONFIG_ADMIN}', mw.getRandomString(6))
+    content = content.replace('{$CONFIG_PASS}', mw.getRandomString(10))
+    content = content.replace('{$CONFIG_REDIS}', initRedisConf())
     return content
 
 
@@ -154,6 +173,7 @@ def initDreplace():
     if not os.path.exists(dst_conf_init):
         content = mw.readFile(getConfTpl())
         content = content.replace('{$SERVER_PATH}', service_path)
+        content = contentReplace(content)
         mw.writeFile(dst_conf, content)
         mw.writeFile(dst_conf_init, 'ok')
 
@@ -163,8 +183,8 @@ def initDreplace():
     if os.path.exists(systemDir) and not os.path.exists(systemService):
         systemServiceTpl = getPluginDir() + '/init.d/' + getPluginName() + '.service.tpl'
         service_path = mw.getServerDir()
-        se_content = mw.readFile(systemServiceTpl)
-        se_content = se_content.replace('{$SERVER_PATH}', service_path)
+        content = mw.readFile(systemServiceTpl)
+        content = content.replace('{$SERVER_PATH}', service_path)
         mw.writeFile(systemService, se_content)
         mw.execShell('systemctl daemon-reload')
 
@@ -280,6 +300,15 @@ def initdUinstall():
 def runLog():
     return getServerDir() + '/logs.pl'
 
+def installPreInspection():
+    redis_path = mw.getServerDir() + "/redis"
+    if not os.path.exists(redis_path):
+        return "默认需要安装Redis"
+
+    mongodb_path = mw.getServerDir() + "/mongodb"
+    if not os.path.exists(mongodb_path):
+        return "默认需要安装MongoDB"
+    return 'ok'
 
 if __name__ == "__main__":
     func = sys.argv[1]
@@ -299,6 +328,8 @@ if __name__ == "__main__":
         print(initdInstall())
     elif func == 'initd_uninstall':
         print(initdUinstall())
+    elif func == 'install_pre_inspection':
+        print(installPreInspection())
     elif func == 'conf':
         print(getConf())
     elif func == 'run_log':

@@ -32,6 +32,8 @@ Install_App()
 		ARCH="amd64"
 	elif [ "$sysArch" == "aarch64" ];then
 		ARCH="arm64"
+	elif [ "$sysArch" == "arm64" ];then
+		ARCH="arm64"
 	else
 		ARCH="amd64"
 	fi
